@@ -41,6 +41,7 @@ public class WebFragment extends Fragment {
         wv=(WebView) rootview.findViewById(R.id.webView);
         WebSettings webSettings = wv.getSettings();
         webSettings.setJavaScriptEnabled(true);
+
         //loading webpages
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);

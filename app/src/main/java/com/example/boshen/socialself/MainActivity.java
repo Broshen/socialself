@@ -5,6 +5,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -63,14 +64,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        welcomeText.setText("Welcome ____ to your social media manager");
+        //display welcome message to user:
+        String name = loginPref.getString("name", null);
 
+        //if user's name doesnt exist, log them in again to get their name, otherwise, simply display the welcome message
+        if(name == null){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+        else {
+            welcomeText.setText("Welcome, " + name + ", to your social media manager!");
+        }
 
         //button listeners
         scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //TODO: make my own image recognition instead of using shitty qr scanner
                 // Intent intent = new Intent(v.getContext(), qr_scanner.class);
                 //for debugging
                 Intent intent = new Intent(v.getContext(), view_medias.class);

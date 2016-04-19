@@ -13,6 +13,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     AccessToken accessToken;
     AccessTokenTracker accessTokenTracker;
+    Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +60,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                loginEditor.putBoolean("isloggedin", true);
-                loginEditor.commit();
                 Log.d("login", "success");
 
+                loginEditor.putBoolean("isloggedin", true);
+                loginEditor.putString("name", Profile.getCurrentProfile().getName());
+                loginEditor.commit();
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("accessToken", accessToken);
                 startActivity(intent);
             }
 
