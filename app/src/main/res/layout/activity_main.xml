@@ -11,8 +11,9 @@
         android:layout_height="100dp"
         android:text="Scan a QR Code"
         android:id="@+id/scanQR"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/welcomeText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="fill_parent"
@@ -20,5 +21,26 @@
         android:text="Manage my social media accounts"
         android:id="@+id/manageMedia"
         android:layout_below="@+id/scanQR"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:text="Log Out"
+        android:id="@+id/logoutbutton"
+        android:layout_below="@+id/manageMedia"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Hello!!"
+        android:id="@+id/welcomeText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textIsSelectable="false" />
 </RelativeLayout>
