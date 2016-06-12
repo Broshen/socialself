@@ -1,13 +1,8 @@
 package com.example.boshen.socialself;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -19,6 +14,7 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
 import java.util.ArrayList;
 import java.util.List;
 
+//this activity uses the ZBar scanning library to scan a QR code
 public class qr_scanner extends AppCompatActivity implements ZBarScannerView.ResultHandler  {
     private ZBarScannerView mScannerView;
     private ArrayList<Integer> mSelectedIndices;
@@ -46,23 +42,18 @@ public class qr_scanner extends AppCompatActivity implements ZBarScannerView.Res
     }
 
     @Override
+    //handle the result from the scanned data
     public void handleResult(Result rawResult) {
-        //alert dialog for debugging
-//        new AlertDialog.Builder(this)
-//                .setTitle(getResources().getString(R.string.app_name))
-//                .setCancelable(false)
-//                .setMessage(rawResult.getContents())
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {}
-//                })
-//                .show();
 
+        //gets a user's data based on the ID that was scanned from the QR code
+        // from the server using an async task
         scanData = rawResult.getContents();
         getUser addUser = new getUser();
 
         addUser.execute();
     }
 
+    //set up the formats that the QR scanner can scan
     public void setupFormats() {
         List<BarcodeFormat> formats = new ArrayList<BarcodeFormat>();
         if(mSelectedIndices == null || mSelectedIndices.isEmpty()) {
@@ -80,14 +71,9 @@ public class qr_scanner extends AppCompatActivity implements ZBarScannerView.Res
         }
     }
 
-
+    //async task that gets the user data from the mySQL server based on the ID that was scanned
     class getUser extends databaseFunctions.getuser {
 
-//        String addUserId;
-//
-//        public getUser(String userId){
-//            this.addUserId=userId;
-//        }
         protected void onPreExecute(){
             this.sendData=scanData;
         }
@@ -95,14 +81,17 @@ public class qr_scanner extends AppCompatActivity implements ZBarScannerView.Res
         protected void onPostExecute(String s) {
 
             try {
+                //convert string back to JSON object
                 JSONObject result = new JSONObject(s);
 
+                //if a user was successfully retrieved, start the activity to show their info
                 if(result.getInt("success") == 1) {
                     Intent intent = new Intent(qr_scanner.this, view_medias.class);
                     intent.putExtra("data", result.toString());
                     startActivity(intent);
 
                 }
+          //otherwise, display the error message
                 else {
                     Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(qr_scanner.this, MainActivity.class);
@@ -112,8 +101,6 @@ public class qr_scanner extends AppCompatActivity implements ZBarScannerView.Res
             catch(Exception e){
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
-
-
         }
     }
 }

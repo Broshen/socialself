@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.boshen.socialself.R;
-import com.example.boshen.socialself.myQrCode;
 
+//fragment to display the contact info (phone number, email)
 public class ContactFragment extends Fragment {
 
     View rootview;
@@ -28,6 +28,7 @@ public class ContactFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        //get fields that were passed through
         email = getArguments().getString("email");
         phone = getArguments().getString("phone");
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class ContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //display fields
         rootview = inflater.inflate(R.layout.fragment_contact, container, false);
         nameField = (EditText)rootview.findViewById(R.id.name);
         emailField = (EditText)rootview.findViewById(R.id.email);
@@ -50,6 +52,7 @@ public class ContactFragment extends Fragment {
             phoneField.setText(phone);
         }
 
+        //add listener to add contact info when button is clicked
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

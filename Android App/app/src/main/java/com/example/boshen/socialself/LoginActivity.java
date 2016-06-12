@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -20,9 +21,10 @@ import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONObject;
 
+//this activity is for the user to log into their account by authenticating with facebook API
 public class LoginActivity extends AppCompatActivity {
 
-
+    //variable declaration
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     SharedPreferences userPref;
@@ -33,21 +35,25 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //initialize facebook API
         callbackManager = CallbackManager.Factory.create();
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //assign variable to UI field
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions("user_friends"); //facebook API
 
+        //initialize local user data database and editor
         userPref = getSharedPreferences("user_info", Context.MODE_PRIVATE);
         userPrefEditor = userPref.edit();
 
         //logs any user out before logging back in
         LoginManager.getInstance().logOut();
 
+        //facebook API stuff
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(
@@ -67,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("login", "success");
                 String id = Profile.getCurrentProfile().getId();
 
-                //set logged in to true, record name of user
+                //set logged in to true, record name of user and their unique fb id
                 userPrefEditor.putBoolean("isloggedin", true);
                 userPrefEditor.putString("name", Profile.getCurrentProfile().getName());
                 userPrefEditor.putString("id", id);
@@ -77,17 +83,17 @@ public class LoginActivity extends AppCompatActivity {
                 login.execute();
             }
 
+            //these should be pretty self explanatory...
             @Override
             public void onCancel() {
-                // App code
                 Log.d("Debugging - FBlogin", "canceled");
+                Toast.makeText(LoginActivity.this, "Login canceled!", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-
                 Log.d("Debugging - FBlogin", "error");
-                // App code
+                Toast.makeText(LoginActivity.this, "Error logging in!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -98,9 +104,11 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    //async class to grab the user's information from our database, or create a new user if needed
     class loginAsync extends databaseFunctions.loaduser{
         protected void onPreExecute(){
 
+            //initialize local user data database and editor
             userPref = getSharedPreferences("user_info", Context.MODE_PRIVATE);
             userPrefEditor = userPref.edit();
         }
@@ -108,8 +116,11 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
 
             try {
+                //convert response string back to JSON object
                 JSONObject result = new JSONObject(s);
 
+                //if user is in the database, save their information locally, and return to the
+                //main menu page
                 if(result.getInt("success") == 1) {
 
                     String id = result.getString("id");
@@ -134,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
+                //if user doesn't exist in our database, go to create new user activity
                 else {
                     Intent intent = new Intent(LoginActivity.this, NewUserActivity.class);
                     startActivity(intent);

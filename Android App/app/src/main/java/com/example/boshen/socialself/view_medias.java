@@ -1,7 +1,5 @@
 package com.example.boshen.socialself;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.os.Bundle;
@@ -9,8 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,10 +17,12 @@ import com.example.boshen.socialself.fragments.ContactFragment;
 
 import org.json.JSONObject;
 
+//this activity shows all the accounts of a user after their QR code is scanned, so that our user can add them
 public class view_medias extends AppCompatActivity{
     // When requested, this adapter returns a DemoObjectFragment,
     // representing an object in the collection.
 
+    // declare variables
     private TabLayout tabLayout;
     private ViewPager viewPager;
     String id, fb_name, insta_name, twitter_name, linkedin_name, email, phone;
@@ -35,6 +33,7 @@ public class view_medias extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_view_medias);
 
+        //get the data that was passed from the QR code scan
         String data = getIntent().getExtras().getString("data");
         try{
             result = new JSONObject(data);
@@ -62,12 +61,13 @@ public class view_medias extends AppCompatActivity{
     }
 
     private void setupViewPager(ViewPager viewPager) {
-       // Fragment fbFragment = new fbFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
+        //if facebook name exists (and is valid), display fb tab
         if(fb_name.length()>1){
             adapter.addFragment(new WebFragment(), "Facebook", "https://m.facebook.com/"+fb_name);
         }
+        //same with insta, twitter, linkedin
         if(insta_name.length()>1){
             adapter.addFragment(new WebFragment(), "Instagram", "https://www.instagram.com/"+insta_name);
         }
@@ -78,6 +78,7 @@ public class view_medias extends AppCompatActivity{
             adapter.addFragment(new WebFragment(), "Linkedin", "https://www.linkedin.com/in/"+linkedin_name);
         }
 
+        //if email or phone number exists, display the contact information tab
         if(email.length()>6 || phone.length()>1) {
             ContactFragment contactFragment = new ContactFragment();
             adapter.mFragmentList.add(contactFragment);
@@ -90,8 +91,6 @@ public class view_medias extends AppCompatActivity{
             contactFragment.setArguments(bundle);
         }
 
-        //TODO: add contacts with email and phone number
-        //adapter.addFragment(new WebFragment(), "Other", "/alex.pantea.507");
 
         viewPager.setAdapter(adapter);
     }
@@ -114,7 +113,9 @@ public class view_medias extends AppCompatActivity{
             return mFragmentList.size();
         }
 
+        //adds a fragment to the tabs
         public void addFragment(Fragment fragment, String title, String url) {
+
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
 

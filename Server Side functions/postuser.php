@@ -2,7 +2,6 @@
 
 // connect to the server
 $conn = new mysqli("localhost","boshencu_tester","mysqlpassword","boshencu_test1");
-//$mysqlpassword= "fuckyousql1!"
 
 // Check connection
 if ($conn->connect_error) {
