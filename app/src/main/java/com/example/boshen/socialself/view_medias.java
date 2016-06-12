@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.boshen.socialself.fragments.WebFragment;
+import com.example.boshen.socialself.fragments.ContactFragment;
 
 import org.json.JSONObject;
 
@@ -77,6 +78,18 @@ public class view_medias extends AppCompatActivity{
             adapter.addFragment(new WebFragment(), "Linkedin", "https://www.linkedin.com/in/"+linkedin_name);
         }
 
+        if(email.length()>6 || phone.length()>1) {
+            ContactFragment contactFragment = new ContactFragment();
+            adapter.mFragmentList.add(contactFragment);
+            adapter.mFragmentTitleList.add("Contact Info");
+
+            Bundle bundle = new Bundle();
+            bundle.putString("email", email);
+            bundle.putString("phone", phone);
+
+            contactFragment.setArguments(bundle);
+        }
+
         //TODO: add contacts with email and phone number
         //adapter.addFragment(new WebFragment(), "Other", "/alex.pantea.507");
 
@@ -86,7 +99,6 @@ public class view_medias extends AppCompatActivity{
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
-        private final List<String> mFragmentUrlList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -105,7 +117,6 @@ public class view_medias extends AppCompatActivity{
         public void addFragment(Fragment fragment, String title, String url) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
-            mFragmentUrlList.add(url);
 
             Bundle bundle = new Bundle();
             bundle.putString("url", url);

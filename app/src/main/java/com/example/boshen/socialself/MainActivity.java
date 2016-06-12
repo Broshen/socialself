@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //TODO: make my own image recognition instead of using shitty qr scanner
                 Intent intent = new Intent(v.getContext(), qr_scanner.class);
                 //for debugging
                 //Intent intent = new Intent(v.getContext(), view_medias.class);
