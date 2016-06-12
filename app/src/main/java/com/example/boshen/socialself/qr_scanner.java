@@ -3,9 +3,14 @@ package com.example.boshen.socialself;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import me.dm7.barcodescanner.zbar.BarcodeFormat;
 import me.dm7.barcodescanner.zbar.Result;
@@ -17,7 +22,7 @@ import java.util.List;
 public class qr_scanner extends AppCompatActivity implements ZBarScannerView.ResultHandler  {
     private ZBarScannerView mScannerView;
     private ArrayList<Integer> mSelectedIndices;
-    public final static String EXTRA_MESSAGE = "com.example.boshen.socialself.MESSAGE";
+    String scanData;
 
     @Override
     public void onCreate(Bundle state) {
@@ -42,19 +47,20 @@ public class qr_scanner extends AppCompatActivity implements ZBarScannerView.Res
 
     @Override
     public void handleResult(Result rawResult) {
-        new AlertDialog.Builder(this)
-                .setTitle(getResources().getString(R.string.app_name))
-                .setCancelable(false)
-                .setMessage(rawResult.getContents() + " " + rawResult.getBarcodeFormat())
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {}
-                })
-                .show();
+        //alert dialog for debugging
+//        new AlertDialog.Builder(this)
+//                .setTitle(getResources().getString(R.string.app_name))
+//                .setCancelable(false)
+//                .setMessage(rawResult.getContents())
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {}
+//                })
+//                .show();
 
-        Intent intent = new Intent(this, view_medias.class);
-        String message = rawResult.getContents();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        scanData = rawResult.getContents();
+        getUser addUser = new getUser();
+
+        addUser.execute();
     }
 
     public void setupFormats() {
@@ -74,4 +80,40 @@ public class qr_scanner extends AppCompatActivity implements ZBarScannerView.Res
         }
     }
 
+
+    class getUser extends databaseFunctions.getuser {
+
+//        String addUserId;
+//
+//        public getUser(String userId){
+//            this.addUserId=userId;
+//        }
+        protected void onPreExecute(){
+            this.sendData=scanData;
+        }
+
+        protected void onPostExecute(String s) {
+
+            try {
+                JSONObject result = new JSONObject(s);
+
+                if(result.getInt("success") == 1) {
+                    Intent intent = new Intent(qr_scanner.this, view_medias.class);
+                    intent.putExtra("data", result.toString());
+                    startActivity(intent);
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(qr_scanner.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+            catch(Exception e){
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+
+        }
+    }
 }

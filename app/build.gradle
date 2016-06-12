@@ -31,4 +31,6 @@ dependencies {
     compile 'me.dm7.barcodescanner:zbar:1.8.4'
 
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+
+    compile 'com.android.support:customtabs:23.0.0+'
 }

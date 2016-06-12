@@ -36,6 +36,12 @@
         </activity>
         <activity android:name=".LoginActivity" >
         </activity>
+        <activity android:name=".NewUserActivity" >
+        </activity>
+        <activity android:name=".myQrCode" >
+        </activity>
+        <activity android:name=".EditUser" >
+        </activity>
     </application>
 
 </manifest>

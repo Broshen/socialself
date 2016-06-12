@@ -20,7 +20,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="Add a friend"
+        android:text="Add a friend via QR"
         android:id="@+id/scanQR"
         android:layout_below="@+id/welcomeText"
         android:layout_alignParentLeft="true"
@@ -29,7 +29,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:text="View my code"
+        android:text="View my QR code"
         android:id="@+id/viewCode"
         android:layout_below="@+id/scanQR"
         android:layout_alignParentRight="true"
@@ -41,7 +41,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="100dp"
-        android:text="Manage my Accounts"
+        android:text="Manage my linked social media accounts"
         android:id="@+id/manageMedia"
         android:layout_below="@+id/viewCode"
         android:layout_alignParentLeft="true"
